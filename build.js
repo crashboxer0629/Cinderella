@@ -52,8 +52,13 @@ function transform(source, isHtml = false) {
   return result;
 }
 
-function copyDirectory(name) {
-  fs.cpSync(path.join(root, name), path.join(output, name), { recursive: true });
+function copyDirectory(name, optional = false) {
+  const source = path.join(root, name);
+  if (!fs.existsSync(source)) {
+    if (optional) return;
+    throw new Error(`Missing required directory: ${name}`);
+  }
+  fs.cpSync(source, path.join(output, name), { recursive: true });
 }
 
 fs.rmSync(output, { recursive: true, force: true });
@@ -64,7 +69,8 @@ for (const file of publicFiles) {
   fs.writeFileSync(path.join(output, file), transform(source));
 }
 
-for (const directory of ['assets', 'content', 'data']) copyDirectory(directory);
+for (const directory of ['assets', 'content']) copyDirectory(directory);
+copyDirectory('data', true);
 
 for (const [file, route] of routes) {
   const html = transform(fs.readFileSync(path.join(root, file), 'utf8'), true);

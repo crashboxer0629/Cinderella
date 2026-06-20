@@ -1,0 +1,5 @@
+'use strict';
+const http=require('node:http'),fs=require('node:fs'),path=require('node:path');
+const root=__dirname,port=Number(process.env.PORT)||8080;
+const mime={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.json':'application/json; charset=utf-8','.png':'image/png','.md':'text/markdown; charset=utf-8'};
+http.createServer((req,res)=>{const url=new URL(req.url,'http://localhost');const requested=url.pathname==='/'?'/index.html':decodeURIComponent(url.pathname);const file=path.resolve(root,`.${requested}`);if(!file.startsWith(`${root}${path.sep}`)){res.writeHead(403);return res.end('Forbidden');}fs.stat(file,(error,stat)=>{if(error||!stat.isFile()){res.writeHead(404);return res.end('Not found');}res.writeHead(200,{'Content-Type':mime[path.extname(file).toLowerCase()]||'application/octet-stream','X-Content-Type-Options':'nosniff'});fs.createReadStream(file).pipe(res);});}).listen(port,'127.0.0.1',()=>console.log(`Cinderella preview: http://127.0.0.1:${port}`));

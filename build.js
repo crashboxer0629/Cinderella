@@ -1,0 +1,81 @@
+const fs = require('fs');
+const path = require('path');
+
+const root = __dirname;
+const output = path.join(root, 'dist');
+
+const routes = new Map([
+  ['index.html', '/'],
+  ['about.html', '/about/'],
+  ['developer-detail.html', '/about/developer/'],
+  ['games.html', '/games/'],
+  ['game-detail.html', '/games/detail/'],
+  ['goods.html', '/goods/'],
+  ['goods-detail.html', '/goods/detail/'],
+  ['news.html', '/news/'],
+  ['news-detail.html', '/news/detail/'],
+  ['admin.html', '/admin/']
+]);
+
+const publicFiles = [
+  '.nojekyll',
+  'about-page.js',
+  'admin.js',
+  'cms-common.js',
+  'config.js',
+  'content-store.js',
+  'entry-detail.js',
+  'game-data.js',
+  'game-detail.js',
+  'games-page.js',
+  'goods-page.js',
+  'home-page.js',
+  'news-page.js',
+  'script.js',
+  'styles.css'
+];
+
+const cleanUrlScript = `<script>
+  (() => {
+    const routes = ${JSON.stringify(Object.fromEntries(routes))};
+    const file = location.pathname.split('/').pop();
+    if (routes[file]) history.replaceState(null, '', routes[file] + location.search + location.hash);
+  })();
+</script>`;
+
+function transform(source, isHtml = false) {
+  let result = source;
+  for (const [file, route] of routes) result = result.replaceAll(file, route);
+  if (isHtml) {
+    result = result.replace(/<head>/i, `<head><base href="/">${cleanUrlScript}`);
+  }
+  return result;
+}
+
+function copyDirectory(name) {
+  fs.cpSync(path.join(root, name), path.join(output, name), { recursive: true });
+}
+
+fs.rmSync(output, { recursive: true, force: true });
+fs.mkdirSync(output, { recursive: true });
+
+for (const file of publicFiles) {
+  const source = fs.readFileSync(path.join(root, file), 'utf8');
+  fs.writeFileSync(path.join(output, file), transform(source));
+}
+
+for (const directory of ['assets', 'content', 'data']) copyDirectory(directory);
+
+for (const [file, route] of routes) {
+  const html = transform(fs.readFileSync(path.join(root, file), 'utf8'), true);
+  const cleanTarget = route === '/'
+    ? path.join(output, 'index.html')
+    : path.join(output, route.slice(1), 'index.html');
+
+  fs.mkdirSync(path.dirname(cleanTarget), { recursive: true });
+  fs.writeFileSync(cleanTarget, html);
+
+  if (file !== 'index.html') fs.writeFileSync(path.join(output, file), html);
+}
+
+console.log(`Built ${routes.size} clean routes in ${output}`);

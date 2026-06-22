@@ -43,11 +43,16 @@ const cleanUrlScript = `<script>
   })();
 </script>`;
 
+const siteIcons = [
+  '<meta name="theme-color" content="#080b0d">',
+  '<link rel="icon" type="image/svg+xml" href="/assets/cinderella-favicon.svg?v=2">'
+].join('');
+
 function transform(source, isHtml = false) {
   let result = source;
   for (const [file, route] of routes) result = result.replaceAll(file, route);
   if (isHtml) {
-    result = result.replace(/<head>/i, `<head><base href="/">${cleanUrlScript}`);
+    result = result.replace(/<head>/i, `<head><base href="/">${siteIcons}${cleanUrlScript}`);
   }
   return result;
 }

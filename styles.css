@@ -971,6 +971,7 @@ img { display: block; max-width: 100%; }
 .roadmap-card > * { position: relative; z-index: 1; }
 .roadmap-card:hover { border-color: rgba(199,255,47,.58); background: rgba(199,255,47,.035); transform: translateX(8px); }
 .roadmap-card:hover::before { opacity: 1; }
+.roadmap-card-link { display: block; color: inherit; }
 
 .roadmap-item.is-visible .roadmap-dot,
 .roadmap-item:hover .roadmap-dot {
@@ -1011,6 +1012,49 @@ img { display: block; max-width: 100%; }
   color: rgba(255,255,255,.62);
   word-break: keep-all;
 }
+
+.roadmap-linked-game {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+  margin-top: 34px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255,255,255,.13);
+  color: rgba(255,255,255,.55);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.roadmap-linked-game strong {
+  color: var(--acid);
+  font-size: 12px;
+}
+
+.roadmap-linked-game em {
+  margin-left: auto;
+  color: rgba(255,255,255,.42);
+  font-style: normal;
+}
+
+.roadmap-focus-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 28px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid currentColor;
+  color: var(--acid);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+.roadmap-focus-link span { transition: transform .2s ease; }
+.roadmap-focus-link:hover span { transform: translateX(5px); }
 
 /* Game detail */
 .game-detail-hero {
@@ -1064,10 +1108,11 @@ img { display: block; max-width: 100%; }
 .admin-form { display: grid; gap: 20px; }
 .auth-form { margin-top: 36px; }
 .admin-form label { display: grid; gap: 9px; color: rgba(255,255,255,.62); font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
-.admin-form input, .admin-form textarea { width: 100%; border: 1px solid rgba(255,255,255,.18); border-radius: 0; outline: 0; padding: 15px 16px; color: white; background: #0d1215; font: 500 15px/1.5 Inter, Pretendard, "Noto Sans KR", sans-serif; text-transform: none; transition: border-color .2s, background .2s; }
+.admin-form input, .admin-form textarea, .admin-form select { width: 100%; border: 1px solid rgba(255,255,255,.18); border-radius: 0; outline: 0; padding: 15px 16px; color: white; background: #0d1215; font: 500 15px/1.5 Inter, Pretendard, "Noto Sans KR", sans-serif; text-transform: none; transition: border-color .2s, background .2s; }
 .admin-form textarea { resize: vertical; min-height: 90px; }
-.admin-form input:focus, .admin-form textarea:focus { border-color: var(--acid); background: #10171a; }
+.admin-form input:focus, .admin-form textarea:focus, .admin-form select:focus { border-color: var(--acid); background: #10171a; }
 .admin-form input[type="color"] { min-height: 54px; padding: 6px; cursor: pointer; }
+.admin-field-hint { margin: -4px 0 0; color: rgba(255,255,255,.42); font-size: 12px; line-height: 1.6; word-break: break-all; }
 .admin-primary { min-height: 54px; border: 1px solid var(--acid); color: var(--ink); background: var(--acid); font-size: 12px; font-weight: 900; letter-spacing: .08em; cursor: pointer; text-transform: uppercase; transition: filter .2s, transform .2s; }
 .admin-primary:hover { filter: brightness(1.08); transform: translateY(-2px); }
 .form-message { min-height: 20px; margin: -4px 0; color: var(--acid); font-size: 12px; }

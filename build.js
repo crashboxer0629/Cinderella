@@ -19,7 +19,6 @@ const routes = new Map([
 
 const publicFiles = [
   '.nojekyll',
-  'CNAME',
   'about-page.js',
   'admin.js',
   'cms-common.js',

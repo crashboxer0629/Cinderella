@@ -176,6 +176,89 @@ const enhanceCounter = (element) => {
   countObserver.observe(element);
 };
 
+const kineticWordObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    const element = entry.target;
+    if (!entry.isIntersecting) {
+      if (element.dataset.wordTimer) {
+        clearInterval(Number(element.dataset.wordTimer));
+        delete element.dataset.wordTimer;
+      }
+      return;
+    }
+    if (element.dataset.wordTimer) return;
+    const words = (element.dataset.rotatingWords || element.textContent)
+      .split(',')
+      .map((word) => word.trim().replace(/\.$/, ''))
+      .filter(Boolean);
+    if (words.length < 2) return;
+    const switchWord = () => {
+      const index = (Number(element.dataset.wordIndex || 0) + 1) % words.length;
+      element.dataset.wordIndex = String(index);
+      element.classList.add('is-switching');
+      window.setTimeout(() => {
+        element.textContent = `${words[index]}.`;
+      }, reduceMotion ? 0 : 130);
+      window.setTimeout(() => {
+        element.classList.remove('is-switching');
+      }, reduceMotion ? 0 : 360);
+    };
+    element.dataset.wordTimer = String(window.setInterval(switchWord, reduceMotion ? 3600 : 1650));
+  });
+}, { threshold: 0.55 });
+
+const enhanceKineticWord = (element) => {
+  if (!(element instanceof Element) || element.dataset.kineticReady) return;
+  element.dataset.kineticReady = 'true';
+  const words = (element.dataset.rotatingWords || element.textContent)
+    .split(',')
+    .map((word) => word.trim().replace(/\.$/, ''))
+    .filter(Boolean);
+  element.dataset.wordIndex = String(Math.max(0, words.indexOf(element.textContent.trim().replace(/\.$/, ''))));
+  kineticWordObserver.observe(element);
+};
+
+const infinityObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    const element = entry.target;
+    if (!entry.isIntersecting) {
+      element.dataset.infinityVisible = 'false';
+      element.textContent = '∞';
+      if (element.dataset.infinityFrame) {
+        cancelAnimationFrame(Number(element.dataset.infinityFrame));
+        delete element.dataset.infinityFrame;
+      }
+      return;
+    }
+    if (element.dataset.infinityVisible === 'true') return;
+    element.dataset.infinityVisible = 'true';
+    const duration = reduceMotion ? 1 : 980;
+    const start = performance.now();
+    const tick = (now) => {
+      const progress = Math.min(1, (now - start) / duration);
+      const burst = Math.min(99, Math.floor((1 - Math.pow(1 - progress, 2.8)) * 100));
+      element.textContent = String(burst).padStart(2, '0');
+      if (progress < 1 && element.dataset.infinityVisible === 'true') {
+        element.dataset.infinityFrame = String(requestAnimationFrame(tick));
+      } else {
+        element.textContent = '∞';
+        element.classList.add('infinity-landed');
+        window.setTimeout(() => element.classList.remove('infinity-landed'), reduceMotion ? 0 : 520);
+        delete element.dataset.infinityFrame;
+      }
+    };
+    element.classList.remove('infinity-landed');
+    element.textContent = '00';
+    element.dataset.infinityFrame = String(requestAnimationFrame(tick));
+  });
+}, { threshold: 0.55 });
+
+const enhanceInfinityCounter = (element) => {
+  if (!(element instanceof Element) || element.dataset.infinityReady) return;
+  element.dataset.infinityReady = 'true';
+  infinityObserver.observe(element);
+};
+
 const parallaxSelector = '.hero, .page-hero, .game-detail-hero, .article-hero, .developer-portrait, .goods-detail-visual';
 const enhanceParallax = (element) => {
   if (!(element instanceof Element) || element.dataset.parallaxReady) return;
@@ -200,11 +283,15 @@ const enhanceInteractions = (root = document) => {
     if (element.matches(interactiveSelector)) enhanceSurface(element);
     if (element.matches(magneticSelector)) enhanceMagnetic(element);
     if (element.matches('.stat strong')) enhanceCounter(element);
+    if (element.matches('.kinetic-word')) enhanceKineticWord(element);
+    if (element.matches('[data-infinity-stat]')) enhanceInfinityCounter(element);
     if (element.matches(parallaxSelector)) enhanceParallax(element);
   });
   root.querySelectorAll?.(interactiveSelector).forEach(enhanceSurface);
   root.querySelectorAll?.(magneticSelector).forEach(enhanceMagnetic);
   root.querySelectorAll?.('.stat strong').forEach(enhanceCounter);
+  root.querySelectorAll?.('.kinetic-word').forEach(enhanceKineticWord);
+  root.querySelectorAll?.('[data-infinity-stat]').forEach(enhanceInfinityCounter);
   root.querySelectorAll?.(parallaxSelector).forEach(enhanceParallax);
 };
 

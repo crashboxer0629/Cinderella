@@ -75,9 +75,9 @@
   function clearPreview() { localStorage.removeItem(LOCAL_KEY); cache = null; }
   function safeImage(value) {
     const image = String(value || '').trim();
-    return /^(https?:\/\/|assets\/|\.\/assets\/|data:image\/(?:png|jpeg|webp);base64,)/i.test(image) ? image : 'assets/hero-palace.png';
+    return /^(https:\/\/|assets\/|\.\/assets\/|data:image\/(?:png|jpeg|webp);base64,)/i.test(image) ? image : 'assets/hero-palace.png';
   }
-  function safeLink(value) { const link=String(value||'').trim(); return /^https?:\/\//i.test(link)?link:''; }
+  function safeLink(value) { const link=String(value||'').trim(); return /^https:\/\//i.test(link)?link:''; }
   function makeId(value) { return String(value || '').toLowerCase().trim().replace(/[^a-z0-9가-힣]+/g, '-').replace(/^-+|-+$/g, '') || `item-${Date.now()}`; }
 
   window.ContentStore = { load, login, logout, session, save, clearPreview, configured, safeImage, safeLink, makeId };

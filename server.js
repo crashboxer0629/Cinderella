@@ -38,7 +38,7 @@ function findFile(candidates, response) {
 http.createServer((request, response) => {
   let pathname;
   try {
-    pathname = decodeURIComponent(new URL(request.url, 'http://localhost').pathname);
+    pathname = decodeURIComponent(new URL(request.url, 'https://localhost').pathname);
   } catch (_) {
     response.writeHead(400);
     response.end('Bad request');
@@ -58,5 +58,5 @@ http.createServer((request, response) => {
     : [target];
   findFile(candidates, response);
 }).listen(port, '127.0.0.1', () => {
-  console.log(`Cinderella preview: http://127.0.0.1:${port}`);
+  console.log(`Cinderella preview: 127.0.0.1:${port}`);
 });

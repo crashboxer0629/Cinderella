@@ -23,7 +23,7 @@ GitHub Pages에 바로 배포할 수 있는 게임 스튜디오 웹사이트와 
 npm start
 ```
 
-`http://localhost:8080`을 엽니다. Supabase 설정 전 `admin.html`의 로컬 데모 모드로 편집 UI를 시험할 수 있습니다. 데모 변경은 해당 브라우저에만 저장됩니다.
+`localhost:8080`을 엽니다. Supabase 설정 전 `admin.html`의 로컬 데모 모드로 편집 UI를 시험할 수 있습니다. 데모 변경은 해당 브라우저에만 저장됩니다.
 
 ## 실제 관리자와 GitHub Pages 배포
 

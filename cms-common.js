@@ -3,7 +3,7 @@
   const content = await window.ContentStore.load();
   const global = content.global || {};
   document.querySelectorAll('.brand > span:last-child').forEach((el) => { el.textContent = global.studioName || 'CINDERELLA'; });
-  const navMap = { 'about.html': global.navAbout, 'games.html': global.navGames, 'goods.html': global.navGoods, 'news.html': global.navNews };
+  const navMap = { 'about.html': global.navAbout, 'games.html': global.navGames, 'roadmap.html': global.navRoadmap, 'goods.html': global.navGoods, 'news.html': global.navNews };
   document.querySelectorAll('.main-nav a').forEach((link) => {
     const file = link.getAttribute('href');
     if (navMap[file]) link.textContent = navMap[file];

@@ -10,6 +10,7 @@ const routes = new Map([
   ['developer-detail.html', '/about/developer/'],
   ['games.html', '/games/'],
   ['game-detail.html', '/games/detail/'],
+  ['roadmap.html', '/roadmap/'],
   ['goods.html', '/goods/'],
   ['goods-detail.html', '/goods/detail/'],
   ['news.html', '/news/'],
@@ -19,6 +20,7 @@ const routes = new Map([
 
 const publicFiles = [
   '.nojekyll',
+  'CNAME',
   'about-page.js',
   'admin.js',
   'cms-common.js',
@@ -28,12 +30,26 @@ const publicFiles = [
   'game-data.js',
   'game-detail.js',
   'games-page.js',
+  'roadmap-page.js',
   'goods-page.js',
   'home-page.js',
   'news-page.js',
   'script.js',
   'styles.css'
 ];
+
+const forceSecureOriginScript = `<script>
+  (() => {
+    const canonicalHost = 'www.teamcnd.kro.kr';
+    const isLocal = /^(localhost|127\\.0\\.0\\.1|\\[::1\\])$/.test(location.hostname);
+    if (!isLocal && (location.protocol !== 'https:' || location.hostname === 'teamcnd.kro.kr')) {
+      const next = new URL(location.href);
+      next.protocol = 'https:';
+      if (location.hostname === 'teamcnd.kro.kr') next.hostname = canonicalHost;
+      location.replace(next.href);
+    }
+  })();
+</script>`;
 
 const cleanUrlScript = `<script>
   (() => {
@@ -44,6 +60,7 @@ const cleanUrlScript = `<script>
 </script>`;
 
 const siteIcons = [
+  '<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">',
   '<meta name="theme-color" content="#080b0d">',
   '<link rel="icon" type="image/svg+xml" href="/assets/cinderella-favicon.svg?v=2">'
 ].join('');
@@ -52,7 +69,7 @@ function transform(source, isHtml = false) {
   let result = source;
   for (const [file, route] of routes) result = result.replaceAll(file, route);
   if (isHtml) {
-    result = result.replace(/<head>/i, `<head><base href="/">${siteIcons}${cleanUrlScript}`);
+    result = result.replace(/<head>/i, `<head><base href="/">${siteIcons}${forceSecureOriginScript}${cleanUrlScript}`);
   }
   return result;
 }

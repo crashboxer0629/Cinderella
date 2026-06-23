@@ -259,24 +259,6 @@ const enhanceInfinityCounter = (element) => {
   infinityObserver.observe(element);
 };
 
-const parallaxSelector = '.hero, .page-hero, .game-detail-hero, .article-hero, .developer-portrait, .goods-detail-visual';
-const enhanceParallax = (element) => {
-  if (!(element instanceof Element) || element.dataset.parallaxReady) return;
-  element.dataset.parallaxReady = 'true';
-  if (!finePointer || reduceMotion) return;
-  element.addEventListener('pointermove', (event) => {
-    const rect = element.getBoundingClientRect();
-    const x = ((event.clientX - rect.left) / rect.width - .5) * 18;
-    const y = ((event.clientY - rect.top) / rect.height - .5) * 14;
-    element.style.setProperty('--hero-shift-x', `${x}px`);
-    element.style.setProperty('--hero-shift-y', `${y}px`);
-  }, { passive: true });
-  element.addEventListener('pointerleave', () => {
-    element.style.removeProperty('--hero-shift-x');
-    element.style.removeProperty('--hero-shift-y');
-  });
-};
-
 const enhanceInteractions = (root = document) => {
   const roots = root instanceof Element ? [root] : [];
   roots.forEach((element) => {
@@ -285,14 +267,12 @@ const enhanceInteractions = (root = document) => {
     if (element.matches('.stat strong')) enhanceCounter(element);
     if (element.matches('.kinetic-word')) enhanceKineticWord(element);
     if (element.matches('[data-infinity-stat]')) enhanceInfinityCounter(element);
-    if (element.matches(parallaxSelector)) enhanceParallax(element);
   });
   root.querySelectorAll?.(interactiveSelector).forEach(enhanceSurface);
   root.querySelectorAll?.(magneticSelector).forEach(enhanceMagnetic);
   root.querySelectorAll?.('.stat strong').forEach(enhanceCounter);
   root.querySelectorAll?.('.kinetic-word').forEach(enhanceKineticWord);
   root.querySelectorAll?.('[data-infinity-stat]').forEach(enhanceInfinityCounter);
-  root.querySelectorAll?.(parallaxSelector).forEach(enhanceParallax);
 };
 
 enhanceInteractions();

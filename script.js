@@ -55,3 +55,167 @@ document.querySelectorAll('.footer-bottom').forEach((footer) => {
   link.textContent = 'Admin';
   footer.appendChild(link);
 });
+
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+const progress = document.createElement('div');
+progress.className = 'scroll-progress';
+progress.setAttribute('aria-hidden', 'true');
+body.appendChild(progress);
+
+const setScrollProgress = () => {
+  const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+  document.documentElement.style.setProperty('--scroll-progress', `${Math.min(100, (window.scrollY / max) * 100)}%`);
+};
+setScrollProgress();
+window.addEventListener('scroll', setScrollProgress, { passive: true });
+window.addEventListener('resize', setScrollProgress, { passive: true });
+
+document.querySelectorAll('.main-nav a').forEach((link) => {
+  const current = location.pathname.replace(/\/index\.html$/, '/');
+  const target = new URL(link.getAttribute('href'), location.href).pathname.replace(/\/index\.html$/, '/');
+  const currentSection = current.split('/').filter(Boolean)[0] || 'home';
+  const targetSection = target.split('/').filter(Boolean)[0] || 'home';
+  link.classList.toggle('active', currentSection === targetSection);
+});
+
+const interactiveSelector = [
+  '.team-card',
+  '.game-facts > div'
+].join(',');
+
+const magneticSelector = [
+  '.brand',
+  '.main-nav a',
+  '.round-link',
+  '.text-link',
+  '.social-link',
+  '.buy-button',
+  '.news-row .arrow',
+  '.admin-footer-link'
+].join(',');
+
+const setPointerVars = (element, event) => {
+  const rect = element.getBoundingClientRect();
+  element.style.setProperty('--mx', `${event.clientX - rect.left}px`);
+  element.style.setProperty('--my', `${event.clientY - rect.top}px`);
+};
+
+const enhanceSurface = (element) => {
+  if (!(element instanceof Element) || element.dataset.surfaceReady) return;
+  element.dataset.surfaceReady = 'true';
+  element.classList.add('interactive-surface');
+  if (!finePointer || reduceMotion) return;
+  element.addEventListener('pointermove', (event) => setPointerVars(element, event), { passive: true });
+  element.addEventListener('pointerleave', () => {
+    element.style.removeProperty('--mx');
+    element.style.removeProperty('--my');
+  });
+};
+
+const enhanceMagnetic = (element) => {
+  if (!(element instanceof Element) || element.dataset.magneticReady) return;
+  element.dataset.magneticReady = 'true';
+  element.classList.add('magnetic-target');
+  if (!finePointer || reduceMotion) return;
+  element.addEventListener('pointermove', (event) => {
+    const rect = element.getBoundingClientRect();
+    const x = ((event.clientX - rect.left) / rect.width - .5) * 12;
+    const y = ((event.clientY - rect.top) / rect.height - .5) * 12;
+    element.style.setProperty('--mag-x', `${x}px`);
+    element.style.setProperty('--mag-y', `${y}px`);
+  }, { passive: true });
+  element.addEventListener('pointerleave', () => {
+    element.style.removeProperty('--mag-x');
+    element.style.removeProperty('--mag-y');
+  });
+};
+
+const countObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    const element = entry.target;
+    if (!entry.isIntersecting) {
+      element.dataset.countVisible = 'false';
+      if (element.dataset.countFrame) {
+        cancelAnimationFrame(Number(element.dataset.countFrame));
+        delete element.dataset.countFrame;
+      }
+      return;
+    }
+    if (element.dataset.countVisible === 'true') return;
+    const target = Number(element.dataset.countTarget || element.textContent.trim());
+    const width = Number(element.dataset.countWidth || String(target).length);
+    if (!Number.isFinite(target)) return;
+    element.dataset.countVisible = 'true';
+    const duration = reduceMotion ? 1 : 850;
+    const start = performance.now();
+    const tick = (now) => {
+      const progress = Math.min(1, (now - start) / duration);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      element.textContent = String(Math.round(target * eased)).padStart(width, '0');
+      if (progress < 1 && element.dataset.countVisible === 'true') {
+        element.dataset.countFrame = String(requestAnimationFrame(tick));
+      } else {
+        element.textContent = String(target).padStart(width, '0');
+        delete element.dataset.countFrame;
+      }
+    };
+    element.textContent = '0'.padStart(width, '0');
+    element.dataset.countFrame = String(requestAnimationFrame(tick));
+  });
+}, { threshold: 0.55 });
+
+const enhanceCounter = (element) => {
+  if (!(element instanceof Element) || element.dataset.counterReady) return;
+  const text = element.textContent.trim();
+  if (!/^\d+$/.test(text)) return;
+  element.dataset.counterReady = 'true';
+  element.dataset.countTarget = String(Number(text));
+  element.dataset.countWidth = String(text.length);
+  countObserver.observe(element);
+};
+
+const parallaxSelector = '.hero, .page-hero, .game-detail-hero, .article-hero, .developer-portrait, .goods-detail-visual';
+const enhanceParallax = (element) => {
+  if (!(element instanceof Element) || element.dataset.parallaxReady) return;
+  element.dataset.parallaxReady = 'true';
+  if (!finePointer || reduceMotion) return;
+  element.addEventListener('pointermove', (event) => {
+    const rect = element.getBoundingClientRect();
+    const x = ((event.clientX - rect.left) / rect.width - .5) * 18;
+    const y = ((event.clientY - rect.top) / rect.height - .5) * 14;
+    element.style.setProperty('--hero-shift-x', `${x}px`);
+    element.style.setProperty('--hero-shift-y', `${y}px`);
+  }, { passive: true });
+  element.addEventListener('pointerleave', () => {
+    element.style.removeProperty('--hero-shift-x');
+    element.style.removeProperty('--hero-shift-y');
+  });
+};
+
+const enhanceInteractions = (root = document) => {
+  const roots = root instanceof Element ? [root] : [];
+  roots.forEach((element) => {
+    if (element.matches(interactiveSelector)) enhanceSurface(element);
+    if (element.matches(magneticSelector)) enhanceMagnetic(element);
+    if (element.matches('.stat strong')) enhanceCounter(element);
+    if (element.matches(parallaxSelector)) enhanceParallax(element);
+  });
+  root.querySelectorAll?.(interactiveSelector).forEach(enhanceSurface);
+  root.querySelectorAll?.(magneticSelector).forEach(enhanceMagnetic);
+  root.querySelectorAll?.('.stat strong').forEach(enhanceCounter);
+  root.querySelectorAll?.(parallaxSelector).forEach(enhanceParallax);
+};
+
+enhanceInteractions();
+
+const interactionObserver = new MutationObserver((mutations) => {
+  mutations.forEach((mutation) => {
+    mutation.addedNodes.forEach((node) => {
+      if (node.nodeType === Node.ELEMENT_NODE) enhanceInteractions(node);
+    });
+  });
+});
+
+interactionObserver.observe(body, { childList: true, subtree: true });

@@ -15,6 +15,7 @@
     teamGrid.replaceChildren();
     (content.team || []).sort((a,b) => a.order-b.order).forEach((member) => {
       const card = document.createElement('a'); card.className = 'team-card reveal visible'; card.href = `developer-detail.html?id=${encodeURIComponent(member.id)}`;
+      card.setAttribute('aria-label', `${member.name} ${member.englishName || ''} 프로필 보기`.trim());
       const role = document.createElement('span'); role.className = 'role'; role.textContent = member.role;
       const initial = document.createElement('span'); initial.className = 'initial'; initial.textContent = member.initial || member.name?.[0] || 'C';
       const info = document.createElement('div'); const name = document.createElement('h3'); name.textContent = `${member.name} · ${member.englishName}`; const bio = document.createElement('p'); bio.textContent = member.bio; info.append(name, bio);

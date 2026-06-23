@@ -4,7 +4,13 @@
   const set = (selector, value) => { const el = document.querySelector(selector); if (el && value != null) el.textContent = value; };
   const formatStat = (value) => String(Math.max(0, Math.round(value))).padStart(2, '0');
   const setStat = (key, value, label) => {
-    set(`[data-home-stat="${key}"]`, formatStat(value));
+    const formatted = formatStat(value);
+    const stat = document.querySelector(`[data-home-stat="${key}"]`);
+    if (stat) {
+      stat.textContent = formatted;
+      stat.dataset.countTarget = String(Math.max(0, Math.round(value)));
+      stat.dataset.countWidth = String(formatted.length);
+    }
     set(`[data-home-stat-label="${key}"]`, label);
   };
   const lines = (selector, value, outlineIndex = -1) => {

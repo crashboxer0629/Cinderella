@@ -3,6 +3,7 @@
     "studioName": "CINDERELLA",
     "email": "cinderella@studio.game",
     "navAbout": "About",
+    "navStudio": "Studio",
     "navGames": "Games",
     "navRoadmap": "Roadmap",
     "navGoods": "Goods",
@@ -39,6 +40,16 @@
     { "id": "do-hyun-jung", "name": "정도현", "englishName": "Do-hyun Jung", "role": "Game Director", "bio": "손에 닿는 조작감과 반복해서 발견되는 규칙을 좋아합니다.", "description": "프로토타입이 말을 걸 때까지 빠르게 만듭니다. 설명보다 플레이로 이해되는 규칙과 오래 손에 남는 움직임을 설계합니다.", "initial": "J", "image": "assets/hero-palace.png", "order": 2 },
     { "id": "ria-moon", "name": "문리아", "englishName": "Ria Moon", "role": "Art Director", "bio": "빛과 재질, 비어 있는 공간으로 세계의 감정을 그립니다.", "description": "아름다움보다 분위기를 오래 남기는 일을 합니다. 낯선 장소가 플레이어에게 조용히 이야기를 거는 장면을 만듭니다.", "initial": "M", "image": "assets/hero-palace.png", "order": 3 },
     { "id": "tae-oh-kim", "name": "김태오", "englishName": "Tae-oh Kim", "role": "Technical Director", "bio": "좋은 아이디어가 기술 때문에 작아지지 않도록 도구를 만듭니다.", "description": "최적화도 디자인이라고 믿습니다. 아티스트와 디자이너가 더 빠르고 자유롭게 실험할 수 있는 파이프라인을 구축합니다.", "initial": "K", "image": "assets/hero-palace.png", "order": 4 }
+  ],
+  "studioPage": {
+    "pageTitle": "OUR\nSTUDIOS.",
+    "deck": "Cinderella 아래에서 각자 다른 감각과 장르를 실험하는 산하 스튜디오와 레이블을 소개합니다.",
+    "introTitle": "하나의 팀,\n여러 개의 실험실.",
+    "introCopy": "각 스튜디오는 독립된 톤과 제작 방식을 갖고 움직입니다. 공통의 기술과 제작 문화를 공유하지만, 플레이어에게 닿는 감각은 서로 다르게 설계합니다."
+  },
+  "studios": [
+    { "id": "cinderella-core", "name": "Cinderella Core", "tagline": "Narrative games after midnight", "status": "Main studio", "focus": "Action narrative", "location": "Seoul", "since": "2026", "members": "05", "description": "Cinderella의 메인 개발팀입니다. 이야기, 액션, 분위기가 한 방향으로 움직이는 게임을 만듭니다.", "image": "assets/hero-palace.png", "url": "", "accent": "#c7ff2f", "order": 1 },
+    { "id": "second-sun-lab", "name": "Second Sun Lab", "tagline": "Co-op prototypes and light puzzles", "status": "Prototype label", "focus": "Co-op puzzle", "location": "Remote / Seoul", "since": "2026", "members": "02", "description": "협동 플레이, 서로 다른 시야, 말로만 이어지는 퍼즐 구조를 실험하는 작은 레이블입니다.", "image": "assets/hero-palace.png", "url": "", "accent": "#8ad8f3", "order": 2 }
   ],
   "gamesPage": { "pageTitle": "PLAY\nDIFFERENT.", "deck": "우리가 만들고 있는 세계들. 완성된 규칙보다 발견의 순간을, 정답보다 플레이어의 해석을 믿습니다." },
   "games": [

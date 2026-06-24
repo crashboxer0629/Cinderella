@@ -762,6 +762,178 @@ img { display: block; max-width: 100%; }
 .team-card:focus-visible p { color: rgba(241,241,235,.72); transform: translateX(10px); }
 .team-card:focus-visible { outline: 3px solid var(--acid); outline-offset: 5px; }
 
+.studio-hero {
+  background:
+    radial-gradient(circle at 70% 32%, rgba(199,255,47,.16), transparent 30%),
+    radial-gradient(circle at 20% 75%, rgba(138,216,243,.14), transparent 32%),
+    linear-gradient(150deg, #10171b, #070a0c 72%);
+}
+
+.studio-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: clamp(70px, 9vw, 130px);
+}
+
+.studio-card {
+  --studio-accent: var(--acid);
+  position: relative;
+  min-height: 620px;
+  display: grid;
+  grid-template-rows: .92fr 1fr;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  color: var(--paper);
+  background: #0b1013;
+  transition: border-color .28s ease, transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s ease;
+}
+
+.studio-card-featured {
+  grid-column: span 2;
+  grid-template-columns: 1.05fr .95fr;
+  grid-template-rows: 1fr;
+  min-height: 680px;
+}
+
+.studio-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--studio-accent) 22%, transparent), transparent 58%);
+  transition: opacity .28s ease;
+}
+
+.studio-card:hover {
+  border-color: color-mix(in srgb, var(--studio-accent) 72%, white 8%);
+  transform: translateY(-7px);
+  box-shadow: 0 30px 90px rgba(0,0,0,.22);
+}
+
+.studio-card:hover::before { opacity: 1; }
+
+.studio-card-visual {
+  position: relative;
+  min-height: 300px;
+  display: grid;
+  place-items: center;
+  background-position: center;
+  background-size: cover;
+  overflow: hidden;
+}
+
+.studio-card-visual::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(0deg, transparent 0 3px, rgba(255,255,255,.035) 3px 4px);
+  opacity: .45;
+}
+
+.studio-card-visual span {
+  position: relative;
+  z-index: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255,255,255,.68);
+  font-size: clamp(120px, 18vw, 300px);
+  line-height: .8;
+  font-weight: 950;
+  text-transform: uppercase;
+  transition: color .28s ease, -webkit-text-stroke-color .28s ease, transform .32s cubic-bezier(.2,.8,.2,1);
+}
+
+.studio-card:hover .studio-card-visual span {
+  color: color-mix(in srgb, var(--studio-accent) 12%, transparent);
+  -webkit-text-stroke-color: var(--studio-accent);
+  transform: rotate(-5deg) scale(1.04);
+}
+
+.studio-card-body {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(26px, 4vw, 54px);
+}
+
+.studio-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-bottom: auto;
+}
+
+.studio-card h2 {
+  margin: clamp(46px, 7vw, 90px) 0 10px;
+  font-size: clamp(38px, 5vw, 86px);
+  line-height: .9;
+  letter-spacing: -.06em;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.studio-tagline {
+  margin: 0;
+  color: var(--studio-accent);
+  font-size: clamp(17px, 1.6vw, 24px);
+  font-weight: 760;
+  letter-spacing: -.02em;
+  word-break: keep-all;
+}
+
+.studio-description {
+  max-width: 760px;
+  margin: 22px 0 0;
+  color: rgba(255,255,255,.62);
+  word-break: keep-all;
+}
+
+.studio-facts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  margin: clamp(30px, 4vw, 54px) 0 0;
+  background: var(--line);
+}
+
+.studio-facts div {
+  min-height: 92px;
+  padding: 18px;
+  background: #0b1013;
+}
+
+.studio-facts dt {
+  color: rgba(255,255,255,.42);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.studio-facts dd {
+  margin: 22px 0 0;
+  color: var(--paper);
+  font-size: clamp(17px, 1.7vw, 28px);
+  font-weight: 850;
+  letter-spacing: -.035em;
+}
+
+.studio-open {
+  display: inline-flex;
+  align-self: flex-start;
+  margin-top: 26px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid currentColor;
+  color: var(--studio-accent);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
 .game-list { display: grid; gap: 24px; }
 .game-card { position: relative; min-height: 660px; display: block; overflow: hidden; border: 1px solid var(--line); transition: border-color .3s ease, transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s ease; }
 .game-card .game-bg { position: absolute; inset: 0; background: url("assets/hero-palace.png") center/cover; transition: filter .5s; }
@@ -1327,6 +1499,9 @@ img { display: block; max-width: 100%; }
   .card-grid { grid-template-columns: 1fr; }
   .news-card { min-height: 340px; }
   .manifesto-row { grid-template-columns: 100px 1fr; gap: 25px; }
+  .studio-grid { grid-template-columns: 1fr; }
+  .studio-card,
+  .studio-card-featured { grid-column: auto; grid-template-columns: 1fr; grid-template-rows: auto 1fr; min-height: 560px; }
   .roadmap-board { grid-template-columns: 1fr; }
   .roadmap-panel { position: relative; top: auto; }
   .game-card-content { grid-template-columns: 1fr; }
@@ -1358,6 +1533,11 @@ img { display: block; max-width: 100%; }
   .page-hero { min-height: 62svh; }
   .page-title { font-size: 20vw; }
   .manifesto-row { grid-template-columns: 1fr; gap: 14px; }
+  .studio-card { min-height: 520px; }
+  .studio-card-visual { min-height: 240px; }
+  .studio-facts { grid-template-columns: 1fr; }
+  .studio-facts div { min-height: 74px; }
+  .studio-facts dd { margin-top: 12px; }
   .roadmap-board { padding: 18px; }
   .roadmap-window-bar em { display: none; }
   .roadmap-timeline { padding-left: 26px; }

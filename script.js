@@ -93,6 +93,7 @@ const magneticSelector = [
   '.social-link',
   '.buy-button',
   '.news-row .arrow',
+  '.developer-contact-link',
   '.admin-footer-link'
 ].join(',');
 
